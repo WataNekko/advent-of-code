@@ -1,0 +1,32 @@
+set dotenv-load
+
+var:
+    #!/usr/bin/env sh
+    echo YEAR="${YEAR:-$(basename $(pwd))}"
+
+    DAY="${DAY:-$(find . -maxdepth 1 -type d -name 'day-*' | cut -d- -f2- | sort -nr | head -n 1)}"
+    echo DAY="$(printf '%d' $DAY)"
+    echo DAY_DIR="$(printf 'day-%02d' $DAY)"
+
+    PART="${PART:-1}"
+    echo PART="$PART"
+    echo PART_BIN="part${PART}"
+    
+c $DAY:
+    eval `just var` && cargo generate --path ./daily-template --name "$DAY_DIR" && just in "$PART" "$DAY"
+
+in $PART="" $DAY="":
+    eval `just var` && \
+    curl "https://adventofcode.com/${YEAR}/day/${DAY}/input" --cookie "session=$SESSION" --fail > "./${DAY_DIR}/input${PART}.txt"
+
+w $PART="" $DAY="":
+    eval `just var` && cargo watch -w "$DAY_DIR" -x "check -p $DAY_DIR" -s "just t $PART $DAY" -s "just l $DAY"
+
+l $DAY="":
+    eval `just var` && cargo clippy -p "$DAY_DIR"
+
+t $PART="" $DAY="":
+    eval `just var` && cargo test -p "$DAY_DIR" --lib "$PART_BIN" --bin "$PART_BIN"
+
+bench $PART="" $DAY="":
+    eval `just var` && cargo bench --bench "${DAY_DIR}-bench" "$PART_BIN" >> "./${DAY_DIR}/bench.txt"
