@@ -17,7 +17,7 @@ c $DAY:
 
 in $PART="" $DAY="":
     eval `just var` && \
-    curl "https://adventofcode.com/${YEAR}/day/${DAY}/input" --cookie "session=$SESSION" --fail > "./${DAY_DIR}/input${PART}.txt"
+    curl "https://adventofcode.com/${YEAR}/day/${DAY}/input" -b "session=$SESSION" -f > "./${DAY_DIR}/input${PART}.txt"
 
 w $PART="" $DAY="":
     eval `just var` && cargo watch -w "$DAY_DIR" -x "check -p $DAY_DIR" -s "just t $PART $DAY" -s "just l $DAY"
@@ -30,3 +30,15 @@ t $PART="" $DAY="":
 
 bench $PART="" $DAY="":
     eval `just var` && cargo bench --bench "${DAY_DIR}-bench" "$PART_BIN" >> "./${DAY_DIR}/bench.txt"
+
+y $PART="" $DAY="":
+    eval `just var` && cargo run -p "$DAY_DIR" --bin "$PART_BIN" | xclip -sel clip -i
+
+submit $PART="" $DAY="":
+    #!/usr/bin/env sh
+    eval `just var`
+
+    ANSWER="$(cargo run -p $DAY_DIR --bin $PART_BIN)"
+
+    curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "level=${PART}&answer=${ANSWER}" \
+    -b "session=$SESSION" -f "https://adventofcode.com/${YEAR}/day/${DAY}/answer"
