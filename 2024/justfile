@@ -14,11 +14,11 @@ var:
     echo PART_BIN="part${PART}"
     
 c $DAY:
-    eval `just var` && cargo generate --path ./daily-template --name "$DAY_DIR" && just in "$PART" "$DAY"
+    eval `just var` && cargo generate --path ./daily-template --name "$DAY_DIR" && just in "$DAY"
 
-in $PART="" $DAY="":
+in $DAY="":
     eval `just var` && \
-    curl "https://adventofcode.com/${YEAR}/day/${DAY}/input" -b "session=$SESSION" -f > "./${DAY_DIR}/input${PART}.txt"
+    curl "https://adventofcode.com/${YEAR}/day/${DAY}/input" -b "session=$SESSION" -f > "./${DAY_DIR}/input.txt"
 
 w $PART="" $DAY="":
     eval `just var` && cargo watch -w "$DAY_DIR" -x "check -p $DAY_DIR" -s "just t $PART $DAY" -s "just l $DAY"
