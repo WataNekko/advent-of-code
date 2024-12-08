@@ -5,6 +5,7 @@ var:
     echo YEAR="${YEAR:-$(basename $(pwd))}"
 
     DAY="${DAY:-$(find . -maxdepth 1 -type d -name 'day-*' | cut -d- -f2- | sort -nr | head -n 1)}"
+    DAY="$(echo $DAY | sed -E 's/0*([0-9]*)/\1/')"
     echo DAY="$(printf '%d' $DAY)"
     echo DAY_DIR="$(printf 'day-%02d' $DAY)"
 
