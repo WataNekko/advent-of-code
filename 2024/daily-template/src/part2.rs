@@ -9,6 +9,7 @@ mod tests {
 
     #[test]
     fn test_process() -> miette::Result<()> {
+        tracing_subscriber::fmt::init();
         todo!("haven't built test yet");
         let input = "";
         assert_eq!("", process(input)?);
