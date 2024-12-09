@@ -32,8 +32,11 @@ t $PART="" $DAY="":
 bench $PART="" $DAY="":
     eval `just var` && cargo bench --bench "${DAY_DIR}-bench" "$PART_BIN" >> "./${DAY_DIR}/bench.txt"
 
+r $PART="" $DAY="":
+    eval `just var` && cargo run -p "$DAY_DIR" --bin "$PART_BIN"
+
 y $PART="" $DAY="":
-    eval `just var` && cargo run -p "$DAY_DIR" --bin "$PART_BIN" | xclip -sel clip -i
+    just r $PART $DAY | xclip -sel clip -i
 
 submit $PART="" $DAY="":
     #!/usr/bin/env sh
