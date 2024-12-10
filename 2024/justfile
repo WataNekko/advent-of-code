@@ -13,31 +13,40 @@ var:
     echo PART="$PART"
     echo PART_BIN="part${PART}"
     
-c $DAY:
-    eval `just var` && cargo generate --path ./daily-template --name "$DAY_DIR" && just in "$DAY"
+alias c := create
+create $DAY:
+    eval `just var` && cargo generate --path ./daily-template --name "$DAY_DIR" && just input "$DAY"
 
-in $DAY="":
+alias i := input
+input $DAY="":
     eval `just var` && \
     curl "https://adventofcode.com/${YEAR}/day/${DAY}/input" -b "session=$SESSION" -f > "./${DAY_DIR}/input.txt"
 
-w $PART="" $DAY="":
-    eval `just var` && cargo watch -w "$DAY_DIR" -x "check -p $DAY_DIR" -s "just t $PART $DAY" -s "just l $DAY"
+alias w := watch
+watch $PART="" $DAY="":
+    eval `just var` && cargo watch -w "$DAY_DIR" -x "check -p $DAY_DIR" -s "just test $PART $DAY" -s "just lint $DAY"
 
-l $DAY="":
+alias l := lint
+lint $DAY="":
     eval `just var` && cargo clippy -p "$DAY_DIR"
 
-t $PART="" $DAY="":
+alias t := test
+test $PART="" $DAY="":
     eval `just var` && cargo test -p "$DAY_DIR" --lib "$PART_BIN" --bin "$PART_BIN"
 
+alias b := bench
 bench $PART="" $DAY="":
     eval `just var` && cargo bench --bench "${DAY_DIR}-bench" "$PART_BIN" >> "./${DAY_DIR}/bench.txt"
 
-r $PART="" $DAY="":
+alias r := run
+run $PART="" $DAY="":
     eval `just var` && cargo run -p "$DAY_DIR" --bin "$PART_BIN"
 
-y $PART="" $DAY="":
-    just r $PART $DAY | xclip -sel clip -i
+alias y := yank
+yank $PART="" $DAY="":
+    just run $PART $DAY | xclip -sel clip -i
 
+alias sm := submit
 submit $PART="" $DAY="":
     #!/usr/bin/env sh
     eval `just var`
