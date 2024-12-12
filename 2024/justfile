@@ -29,6 +29,10 @@ watch $PART="" $DAY="":
 alias l := lint
 lint $DAY="":
     eval `just var` && cargo clippy -p "$DAY_DIR"
+    
+alias f := fix
+fix $DAY="":
+    eval `just var` && cargo clippy -p "$DAY_DIR" --fix --allow-dirty
 
 alias t := test
 test $PART="" $DAY="":
