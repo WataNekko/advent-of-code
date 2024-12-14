@@ -22,6 +22,14 @@ input $DAY="":
     eval `just var` && \
     curl "https://adventofcode.com/${YEAR}/day/${DAY}/input" -b "session=$SESSION" -f > "./${DAY_DIR}/input.txt"
 
+alias o := open
+open $DAY="":
+    eval `just var` && xdg-open "https://adventofcode.com/${YEAR}/day/${DAY}"
+
+alias ff := firefox
+firefox $DAY="":
+    eval `just var` && firefox "https://adventofcode.com/${YEAR}/day/${DAY}"
+
 alias w := watch
 watch $PART="" $DAY="":
     eval `just var` && cargo watch -w "$DAY_DIR" -x "check -p $DAY_DIR" -s "just test $PART $DAY" -s "just lint $DAY"
