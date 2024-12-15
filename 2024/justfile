@@ -24,11 +24,11 @@ input $DAY="":
 
 alias o := open
 open $DAY="":
-    eval `just var` && xdg-open "https://adventofcode.com/${YEAR}/day/${DAY}"
+    eval `just var` && xdg-open "https://adventofcode.com/${YEAR}/day/${DAY}" >/dev/null 2>&1 &
 
 alias ff := firefox
 firefox $DAY="":
-    eval `just var` && firefox "https://adventofcode.com/${YEAR}/day/${DAY}"
+    eval `just var` && firefox "https://adventofcode.com/${YEAR}/day/${DAY}" >/dev/null 2>&1 &
 
 alias w := watch
 watch $PART="" $DAY="":
